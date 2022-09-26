@@ -2,28 +2,48 @@ window.onload = () => {
   document.getElementById("start-button").onclick = () => {
     startGame();
   };
+  const theCanvas = document.getElementById("canvas");
+  const ctx = theCanvas.getContext("2d");
 
+  const img = new Image();
+  img.src = "/images/road.png";
+  const imgCar = new Image();
+  imgCar.src = "/images/car.png";
+
+  function drawBackground() {
+    ctx.clearRect(0, 0, 500, 500);
+    ctx.drawImage(img, 0, 0, 500, 500);
+  }
+  function drawCar(x, y) {
+    ctx.drawImage(imgCar, x, y, 40, 80);
+  }
   function startGame() {
-    const img = new Image();
-    img.src = "/images/road.png";
-    const theCanvas = document.getElementById("canvas");
-    const ctx = theCanvas.getContext("2d");
-
-    function drawBackground() {
-      ctx.clearRect(0, 0, 500, 500);
-      ctx.drawImage(img, 0, 0, 500, 500);
-    }
     drawBackground();
-
-    function drawCar(x, y) {
-      ctx.drawImage(imgCar, x, y, 40, 80);
-    }
 
     let carX = 230;
     let carY = 420;
-    const imgCar = new Image();
-    imgCar.src = "/images/car.png";
     drawCar(carX, carY);
+
+    function drawObs() {
+      ctx.fillStyle = "#A52A2A";
+      ctx.fillRect(obsX, obsY, height, 30);
+    }
+    let obsX = Math.floor(Math.random() * (350 - 80) + 80);
+    let obsY = 0;
+    let height = Math.floor(Math.random() * (130 - 60) + 60);
+
+    const idInterval = setInterval(() => {
+      drawBackground();
+      drawCar(carX, carY);
+      if (obsY >= 460) {
+        clearInterval(idInterval);
+        return;
+      }
+      drawObs();
+      obsY += 3;
+    }, 10);
+
+
 
     function moveLeft() {
       if (carX >= 100) {
@@ -47,7 +67,6 @@ window.onload = () => {
           break;
         case "ArrowRight":
           moveRight();
-          console.log("right");
           break;
       }
     });
